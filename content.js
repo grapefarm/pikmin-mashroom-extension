@@ -143,28 +143,58 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        transition: opacity 0.2s ease 0.15s, transform 0.2s ease 0.15s, visibility 0.2s ease 0.15s;
         z-index: 2147483647;
       }
 
       /* 依位置自動向上或向下展開 */
       .hover-hud.pos-top {
-        bottom: 62px;
+        bottom: 64px;
         left: 50%;
         transform: translateX(-50%) translateY(6px);
       }
 
+      /* 🌉 隱形安全橋樑 (Invisible Bridge - 填補香菇與面板間的空氣間隙) */
+      .hover-hud.pos-top::after {
+        content: "";
+        position: absolute;
+        left: -15px;
+        right: -15px;
+        bottom: -26px;
+        height: 28px;
+        background: transparent;
+      }
+
       .hover-hud.pos-bottom {
-        top: 62px;
+        top: 64px;
         left: 50%;
         transform: translateX(-50%) translateY(-6px);
       }
 
-      .floating-mushroom-widget:hover .hover-hud {
+      .hover-hud.pos-bottom::after {
+        content: "";
+        position: absolute;
+        left: -15px;
+        right: -15px;
+        top: -26px;
+        height: 28px;
+        background: transparent;
+      }
+
+      /* Hover 懸停 或 Click 點擊鎖定 時常駐展開 */
+      .floating-mushroom-widget:hover .hover-hud,
+      .floating-mushroom-widget.locked .hover-hud {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transform: translateX(-50%) translateY(0);
+        transition-delay: 0s;
+      }
+
+      /* 鎖定時香菇帶有細緻的鎖定光暈 */
+      .floating-mushroom-widget.locked .mushroom-graphic-wrap {
+        transform: scale(1.12) rotate(-2deg);
+        filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.5)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
       }
 
       .hud-header {
@@ -614,6 +644,19 @@
           const finalRect = widget.getBoundingClientRect();
           floatingPositions[mushId] = { x: finalRect.left, y: finalRect.top };
           chrome.storage.local.set({ floatingPositions });
+        } else {
+          // 原地放開 -> 點擊香菇！切換鎖定固定狀態
+          const wasLocked = widget.classList.contains('locked');
+          // 先關閉其他可能被鎖定的香菇面板
+          const container = shadow ? shadow.getElementById('widgets-container') : null;
+          if (container) {
+            container.querySelectorAll('.floating-mushroom-widget.locked').forEach((w) => {
+              w.classList.remove('locked');
+            });
+          }
+          if (!wasLocked) {
+            widget.classList.add('locked');
+          }
         }
       };
 
@@ -621,6 +664,19 @@
       window.addEventListener('mouseup', onMouseUp);
     });
   }
+
+  // 點擊網頁其他地方自動解除鎖定狀態
+  document.addEventListener('pointerdown', (e) => {
+    const path = e.composedPath ? e.composedPath() : [];
+    const container = shadow ? shadow.getElementById('widgets-container') : null;
+    if (!container) return;
+
+    container.querySelectorAll('.floating-mushroom-widget.locked').forEach((w) => {
+      if (!path.includes(w)) {
+        w.classList.remove('locked');
+      }
+    });
+  });
 
   // 每秒定時刷新掛件的倒數
   function startTickTimer() {
