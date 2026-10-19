@@ -70,7 +70,9 @@ function initEventListeners() {
 
   toggleSettingsBtn.addEventListener('click', () => {
     settingsSection.classList.toggle('open');
-    if (settingsSection.classList.contains('open')) {
+    const isOpen = settingsSection.classList.contains('open');
+    toggleSettingsBtn.classList.toggle('active', isOpen);
+    if (isOpen) {
       addForm.classList.remove('open');
     }
   });
@@ -79,6 +81,7 @@ function initEventListeners() {
     addForm.classList.toggle('open');
     if (addForm.classList.contains('open')) {
       settingsSection.classList.remove('open');
+      toggleSettingsBtn.classList.remove('active');
       document.getElementById('mush-name').focus();
     }
   });
