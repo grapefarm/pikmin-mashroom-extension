@@ -108,11 +108,29 @@
         100% { transform: scale(0.95); opacity: 0.8; }
       }
 
-      /* 蘑菇圖示 */
-      .mushroom-icon {
-        font-size: 26px;
-        line-height: 1;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+      /* 蘑菇圖示包裝 */
+      .mushroom-graphic-wrap {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.15));
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .floating-mushroom-widget:hover .mushroom-graphic-wrap {
+        transform: scale(1.12) rotate(-3deg);
+      }
+
+      .sparkle-star {
+        transform-origin: 33px 10px;
+        animation: starPulse 1.6s infinite ease-in-out;
+      }
+
+      @keyframes starPulse {
+        0%, 100% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+        50% { transform: scale(1.35) rotate(25deg); opacity: 1; }
       }
 
       .floating-mushroom-widget.completed .mushroom-bubble {
@@ -332,6 +350,111 @@
     startTickTimer();
   }
 
+  // 生成高質感立體皮克敏向量香菇 SVG
+  function getMushroomSvg(color) {
+    const configs = {
+      red: { capStart: '#f87171', capEnd: '#dc2626', spot: '#ffffff', glow: '#ef4444' },
+      yellow: { capStart: '#fef08a', capEnd: '#eab308', spot: '#ffffff', glow: '#eab308' },
+      blue: { capStart: '#60a5fa', capEnd: '#2563eb', spot: '#ffffff', glow: '#3b82f6' },
+      white: { capStart: '#ffffff', capEnd: '#cbd5e1', spot: '#f43f5e', glow: '#94a3b8' },
+      purple: { capStart: '#c084fc', capEnd: '#7e22ce', spot: '#ffffff', glow: '#a855f7' },
+      pink: { capStart: '#f472b6', capEnd: '#db2777', spot: '#ffffff', glow: '#ec4899', isWing: true },
+      gray: { capStart: '#94a3b8', capEnd: '#475569', spot: '#cbd5e1', glow: '#64748b', isRock: true },
+      special: { capStart: '#fbbf24', capMid: '#f59e0b', capEnd: '#ec4899', spot: '#ffffff', glow: '#f59e0b', isSpecial: true }
+    };
+
+    const cfg = configs[color] || configs.red;
+
+    let capGrad = '';
+    if (cfg.isSpecial) {
+      capGrad = `
+        <linearGradient id="cap-grad-special" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fde047" />
+          <stop offset="45%" stop-color="#f59e0b" />
+          <stop offset="100%" stop-color="#ec4899" />
+        </linearGradient>
+      `;
+    } else {
+      capGrad = `
+        <radialGradient id="cap-grad-${color}" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="${cfg.capStart}" />
+          <stop offset="100%" stop-color="${cfg.capEnd}" />
+        </radialGradient>
+      `;
+    }
+
+    // 菇頂斑點與特效
+    let spots = '';
+    if (cfg.isSpecial) {
+      spots = `
+        <polygon points="20,13 22,17 26,17 23,20 24,24 20,21 16,24 17,20 14,17 18,17" fill="#ffffff" opacity="0.95" />
+        <circle cx="11" cy="20" r="2.2" fill="#ffffff" opacity="0.9" />
+        <circle cx="29" cy="20" r="2.2" fill="#ffffff" opacity="0.9" />
+        <polygon points="32,7 33.5,9.5 36.5,9.5 34,11.5 35,14.5 32,12.5 29,14.5 30,11.5 27.5,9.5 30.5,9.5" fill="#fbbf24" class="sparkle-star" />
+      `;
+    } else if (cfg.isRock) {
+      spots = `
+        <polygon points="12,18 19,14 21,22 13,24" fill="#ffffff" opacity="0.35" />
+        <polygon points="22,13 29,15 28,23 20,22" fill="#000000" opacity="0.2" />
+        <polygon points="15,22 23,21 21,27 14,26" fill="#ffffff" opacity="0.25" />
+      `;
+    } else {
+      spots = `
+        <ellipse cx="20" cy="14" rx="3.6" ry="3" fill="${cfg.spot}" opacity="0.95" />
+        <ellipse cx="10" cy="20" rx="2.8" ry="3" fill="${cfg.spot}" opacity="0.9" />
+        <ellipse cx="30" cy="20" rx="2.8" ry="3" fill="${cfg.spot}" opacity="0.9" />
+        <circle cx="15" cy="24" r="1.5" fill="${cfg.spot}" opacity="0.85" />
+        <circle cx="25" cy="24" r="1.5" fill="${cfg.spot}" opacity="0.85" />
+      `;
+    }
+
+    let wings = '';
+    if (cfg.isWing) {
+      wings = `
+        <ellipse cx="6" cy="19" rx="4" ry="7" fill="rgba(255,255,255,0.75)" stroke="#f472b6" stroke-width="0.5" transform="rotate(-25 6 19)" />
+        <ellipse cx="34" cy="19" rx="4" ry="7" fill="rgba(255,255,255,0.75)" stroke="#f472b6" stroke-width="0.5" transform="rotate(25 34 19)" />
+      `;
+    }
+
+    const capFill = cfg.isSpecial ? 'url(#cap-grad-special)' : `url(#cap-grad-${color})`;
+
+    return `
+      <svg viewBox="0 0 40 40" width="38" height="38" class="pikmin-mushroom-svg">
+        <defs>
+          ${capGrad}
+          <linearGradient id="stem-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#fef3c7" />
+          </linearGradient>
+          <filter id="mush-soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1.2" stdDeviation="1" flood-color="#0f172a" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+
+        ${wings}
+
+        <!-- 菇柄 (圓潤可愛小身軀) -->
+        <path d="M 14 20 C 13 29, 12 34, 20 34 C 28 34, 27 29, 26 20 Z" fill="url(#stem-grad)" stroke="#d97706" stroke-width="0.5" stroke-opacity="0.3" />
+        
+        <!-- 萌系黑色眼睛 -->
+        <ellipse cx="17.5" cy="27" rx="1.1" ry="1.6" fill="#1e293b" />
+        <ellipse cx="22.5" cy="27" rx="1.1" ry="1.6" fill="#1e293b" />
+        <circle cx="17.9" cy="26.3" r="0.45" fill="#ffffff" />
+        <circle cx="22.9" cy="26.3" r="0.45" fill="#ffffff" />
+        
+        <!-- 腮紅 -->
+        <ellipse cx="15.5" cy="28.2" rx="1.2" ry="0.7" fill="#fca5a5" opacity="0.65" />
+        <ellipse cx="24.5" cy="28.2" rx="1.2" ry="0.7" fill="#fca5a5" opacity="0.65" />
+
+        <!-- 圓滾滾香菇傘頂 -->
+        <path d="M 5 21 C 5 8, 35 8, 35 21 C 35 24, 31 25, 20 25 C 9 25, 5 24, 5 21 Z" fill="${capFill}" filter="url(#mush-soft-shadow)" />
+
+        <!-- 傘頂斑點 / 星芒裝飾 -->
+        ${spots}
+      </svg>
+    `;
+  }
+
   // 建立掛件 DOM
   function createWidgetElement(mush, index) {
     const widget = document.createElement('div');
@@ -355,8 +478,8 @@
 
     widget.innerHTML = `
       <div class="mushroom-bubble">
-        <div class="glow-ring" style="box-shadow: 0 0 12px ${colorConfig.hex};"></div>
-        <div class="mushroom-icon">${colorConfig.icon}</div>
+        <div class="glow-ring" style="box-shadow: 0 0 14px ${colorConfig.hex};"></div>
+        <div class="mushroom-graphic-wrap">${getMushroomSvg(mush.color)}</div>
         <div class="mini-badge battling"></div>
       </div>
 
@@ -429,6 +552,12 @@
     }
 
     widget.className = `floating-mushroom-widget ${phase}`;
+
+    const graphicWrap = widget.querySelector('.mushroom-graphic-wrap');
+    if (graphicWrap && widget.dataset.color !== mush.color) {
+      widget.dataset.color = mush.color;
+      graphicWrap.innerHTML = getMushroomSvg(mush.color);
+    }
 
     const miniBadge = widget.querySelector('.mini-badge');
     if (miniBadge) miniBadge.className = `mini-badge ${phase}`;
