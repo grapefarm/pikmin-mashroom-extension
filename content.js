@@ -184,11 +184,11 @@
       /* Hover 懸停 或 Click 點擊鎖定 時常駐展開 */
       .floating-mushroom-widget:hover .hover-hud,
       .floating-mushroom-widget.locked .hover-hud {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateX(-50%) translateY(0);
-        transition-delay: 0s;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translateX(-50%) translateY(0) !important;
+        transition-delay: 0s !important;
       }
 
       /* 鎖定時香菇帶有細緻的鎖定光暈 */
@@ -552,7 +552,8 @@
       badgeText = '🎉 已重生';
     }
 
-    widget.className = `floating-mushroom-widget ${phase}`;
+    widget.classList.remove('battling', 'respawning', 'completed');
+    widget.classList.add(phase);
 
     const graphicWrap = widget.querySelector('.mushroom-graphic-wrap');
     if (graphicWrap && widget.dataset.color !== mush.color) {
