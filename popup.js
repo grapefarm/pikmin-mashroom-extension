@@ -18,9 +18,32 @@ const COLOR_NAMES = {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadMushrooms();
+  await loadSettings();
   initEventListeners();
   startTick();
 });
+
+// 載入與初始化偏好設定
+async function loadSettings() {
+  const data = await chrome.storage.local.get(['mushroomSize']);
+  const size = data.mushroomSize || 58;
+  applySizeToUI(size);
+}
+
+function applySizeToUI(size) {
+  const slider = document.getElementById('mush-size-slider');
+  const display = document.getElementById('size-val-display');
+  if (slider) slider.value = size;
+  if (display) display.textContent = `${size}px`;
+
+  document.querySelectorAll('.preset-size-btn').forEach((btn) => {
+    if (parseInt(btn.dataset.size, 10) === size) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
 
 // 載入儲存的香菇列表
 async function loadMushrooms() {
@@ -38,20 +61,47 @@ async function saveMushrooms() {
 
 // 初始化所有按鈕與事件
 function initEventListeners() {
-  // 開關新增表單
+  // 開關設定面板與新增表單
   const toggleBtn = document.getElementById('toggle-add-btn');
   const addForm = document.getElementById('add-form');
   const cancelBtn = document.getElementById('cancel-add-btn');
+  const toggleSettingsBtn = document.getElementById('toggle-settings-btn');
+  const settingsSection = document.getElementById('settings-section');
+
+  toggleSettingsBtn.addEventListener('click', () => {
+    settingsSection.classList.toggle('open');
+    if (settingsSection.classList.contains('open')) {
+      addForm.classList.remove('open');
+    }
+  });
 
   toggleBtn.addEventListener('click', () => {
     addForm.classList.toggle('open');
     if (addForm.classList.contains('open')) {
+      settingsSection.classList.remove('open');
       document.getElementById('mush-name').focus();
     }
   });
 
   cancelBtn.addEventListener('click', () => {
     addForm.classList.remove('open');
+  });
+
+  // 尺寸調整滑桿事件
+  const sizeSlider = document.getElementById('mush-size-slider');
+  sizeSlider.addEventListener('input', (e) => {
+    const val = parseInt(e.target.value, 10);
+    applySizeToUI(val);
+    chrome.storage.local.set({ mushroomSize: val });
+  });
+
+  // 尺寸快捷按鈕事件
+  document.querySelectorAll('.preset-size-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const val = parseInt(btn.dataset.size, 10);
+      applySizeToUI(val);
+      chrome.storage.local.set({ mushroomSize: val });
+    });
   });
 
   // 顏色選擇

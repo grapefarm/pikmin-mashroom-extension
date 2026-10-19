@@ -52,14 +52,24 @@
         user-select: none;
       }
 
+      #widgets-container {
+        --mush-size: 58px;
+      }
+
       .floating-mushroom-widget {
         position: fixed;
-        width: 58px;
-        height: 58px;
+        width: var(--mush-size, 58px);
+        height: var(--mush-size, 58px);
         cursor: grab;
         z-index: 2147483647;
-        transition: transform 0.15s ease, filter 0.2s ease;
+        transition: transform 0.15s ease, filter 0.2s ease, width 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         background: transparent;
+      }
+
+      .pikmin-mushroom-svg {
+        width: calc(var(--mush-size, 58px) * 0.93);
+        height: calc(var(--mush-size, 58px) * 0.93);
+        transition: width 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
       .floating-mushroom-widget:active {
@@ -118,8 +128,12 @@
         position: absolute;
         bottom: 3px;
         right: 4px;
-        width: 13px;
-        height: 13px;
+        width: calc(var(--mush-size, 58px) * 0.22);
+        height: calc(var(--mush-size, 58px) * 0.22);
+        min-width: 10px;
+        min-height: 10px;
+        max-width: 18px;
+        max-height: 18px;
         border-radius: 50%;
         border: 2px solid #ffffff;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
@@ -149,7 +163,7 @@
 
       /* 依位置自動向上或向下展開 */
       .hover-hud.pos-top {
-        bottom: 64px;
+        bottom: calc(var(--mush-size, 58px) + 6px);
         left: 50%;
         transform: translateX(-50%) translateY(6px);
       }
@@ -166,7 +180,7 @@
       }
 
       .hover-hud.pos-bottom {
-        top: 64px;
+        top: calc(var(--mush-size, 58px) + 6px);
         left: 50%;
         transform: translateX(-50%) translateY(-6px);
       }
@@ -307,12 +321,21 @@
     `;
   }
 
+  // 動態套用香菇尺寸
+  function applyMushroomSize(size) {
+    const container = shadow ? shadow.getElementById('widgets-container') : null;
+    if (container) {
+      container.style.setProperty('--mush-size', `${size || 58}px`);
+    }
+  }
+
   // 載入資料並初始化
   async function loadAndSync() {
     initShadowHost();
-    const data = await chrome.storage.local.get(['mushrooms', 'floatingPositions']);
+    const data = await chrome.storage.local.get(['mushrooms', 'floatingPositions', 'mushroomSize']);
     currentMushrooms = data.mushrooms || [];
     floatingPositions = data.floatingPositions || {};
+    applyMushroomSize(data.mushroomSize || 58);
     renderWidgets();
   }
 
@@ -421,7 +444,7 @@
     const capFill = cfg.isSpecial ? 'url(#cap-grad-special)' : `url(#cap-grad-${color})`;
 
     return `
-      <svg viewBox="0 0 40 40" width="54" height="54" class="pikmin-mushroom-svg">
+      <svg viewBox="0 0 40 40" class="pikmin-mushroom-svg">
         <defs>
           ${capGrad}
           <linearGradient id="stem-grad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -704,6 +727,9 @@
       }
       if (changes.floatingPositions) {
         floatingPositions = changes.floatingPositions.newValue || {};
+      }
+      if (changes.mushroomSize) {
+        applyMushroomSize(changes.mushroomSize.newValue);
       }
     }
   });

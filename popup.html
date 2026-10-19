@@ -17,8 +17,34 @@
           <span class="subtitle">Pikmin Bloom Timer</span>
         </div>
       </div>
-      <button id="toggle-add-btn" class="btn-icon" title="新增香菇">+</button>
+      <div class="header-actions">
+        <button id="toggle-settings-btn" class="btn-icon btn-gear" title="偏好設定">⚙️</button>
+        <button id="toggle-add-btn" class="btn-icon" title="新增香菇">+</button>
+      </div>
     </header>
+
+    <!-- Settings Section (Collapsible) -->
+    <section id="settings-section" class="settings-section">
+      <div class="settings-title">⚙️ 偏好設定</div>
+
+      <div class="setting-item">
+        <div class="setting-label-row">
+          <label for="mush-size-slider">網頁懸浮香菇尺寸</label>
+          <span id="size-val-display" class="size-val-badge">58px</span>
+        </div>
+        <div class="slider-wrap">
+          <span class="slider-hint">小</span>
+          <input type="range" id="mush-size-slider" min="36" max="96" value="58" step="2" />
+          <span class="slider-hint">大</span>
+        </div>
+        <div class="size-presets">
+          <button type="button" class="preset-size-btn" data-size="42">🤏 小巧 42px</button>
+          <button type="button" class="preset-size-btn active" data-size="58">🍄 預設 58px</button>
+          <button type="button" class="preset-size-btn" data-size="74">🌟 醒目 74px</button>
+          <button type="button" class="preset-size-btn" data-size="96">🦖 巨菇 96px</button>
+        </div>
+      </div>
+    </section>
 
     <!-- Stats Bar -->
     <div class="stats-bar">
