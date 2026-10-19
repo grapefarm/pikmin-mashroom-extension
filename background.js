@@ -50,6 +50,46 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
+// 監聽前端 (Content Script / Popup) 發來的操作訊息
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'fast_finish') {
+    handleFastFinish(request.id).then(() => sendResponse({ success: true }));
+    return true; // 異步回應
+  } else if (request.action === 'toggle_pin') {
+    handleTogglePin(request.id).then(() => sendResponse({ success: true }));
+    return true;
+  }
+});
+
+async function handleFastFinish(id) {
+  const data = await chrome.storage.local.get(['mushrooms']);
+  const mushrooms = data.mushrooms || [];
+  const mush = mushrooms.find((m) => m.id === id);
+  if (!mush) return;
+
+  const now = Date.now();
+  mush.status = 'respawning';
+  mush.finishTime = now;
+  mush.respawnTime = now + (mush.respawnMinutes || 5) * 60 * 1000;
+
+  chrome.alarms.clear(`finish__${id}`);
+  chrome.alarms.create(`respawn__${id}`, {
+    when: mush.respawnTime
+  });
+
+  await chrome.storage.local.set({ mushrooms });
+}
+
+async function handleTogglePin(id) {
+  const data = await chrome.storage.local.get(['mushrooms']);
+  const mushrooms = data.mushrooms || [];
+  const mush = mushrooms.find((m) => m.id === id);
+  if (!mush) return;
+
+  mush.isPinned = !mush.isPinned;
+  await chrome.storage.local.set({ mushrooms });
+}
+
 // 點擊通知時可開啟擴充功能或簡單關閉
 chrome.notifications.onClicked.addListener((notificationId) => {
   chrome.notifications.clear(notificationId);

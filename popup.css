@@ -613,6 +613,21 @@ body {
   border-color: #fca5a5;
 }
 
+.btn-card-action.toggle-pin {
+  color: #475569;
+}
+
+.btn-card-action.toggle-pin.pinned {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #93c5fd;
+  font-weight: 600;
+}
+
+.btn-card-action.toggle-pin:hover {
+  border-color: #93c5fd;
+}
+
 /* Footer */
 .app-footer {
   padding: 8px 16px;

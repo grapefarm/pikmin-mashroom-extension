@@ -311,6 +311,9 @@ function renderMushrooms() {
         </div>
 
         <div class="card-actions">
+          <button class="btn-card-action toggle-pin ${mush.isPinned ? 'pinned' : ''}" data-id="${mush.id}" title="${mush.isPinned ? '取消釘選' : '釘選到網頁畫面'}">
+            ${mush.isPinned ? '📍 已釘選' : '📌 釘選'}
+          </button>
           ${mush.status === 'battling' ? `
             <button class="btn-card-action fast-finish" data-id="${mush.id}" title="提早打完，直接進入5分鐘重生倒數！">
               ⚡ 提前打完
@@ -325,6 +328,13 @@ function renderMushrooms() {
   }).join('');
 
   // 綁定卡片按鈕事件
+  listContainer.querySelectorAll('.toggle-pin').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleTogglePin(btn.dataset.id);
+    });
+  });
+
   listContainer.querySelectorAll('.fast-finish').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -340,6 +350,15 @@ function renderMushrooms() {
   });
 
   updateCountdowns();
+}
+
+// 釘選/取消釘選處理
+async function handleTogglePin(id) {
+  const mush = mushrooms.find((m) => m.id === id);
+  if (!mush) return;
+  mush.isPinned = !mush.isPinned;
+  await saveMushrooms();
+  renderMushrooms();
 }
 
 // 提前打完處理（立即進入重生冷卻）
