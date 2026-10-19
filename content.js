@@ -54,11 +54,12 @@
 
       .floating-mushroom-widget {
         position: fixed;
-        width: 54px;
-        height: 54px;
+        width: 58px;
+        height: 58px;
         cursor: grab;
         z-index: 2147483647;
         transition: transform 0.15s ease, filter 0.2s ease;
+        background: transparent;
       }
 
       .floating-mushroom-widget:active {
@@ -66,65 +67,35 @@
       }
 
       .floating-mushroom-widget.dragging {
-        transform: scale(1.08);
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+        transform: scale(1.12);
+        filter: drop-shadow(0 12px 24px rgba(0,0,0,0.35));
       }
 
-      /* 蘑菇圓形氣泡 */
-      .mushroom-bubble {
+      /* 純香菇懸浮容器 (無框、純透明、自然投影) */
+      .mushroom-graphic-wrap {
         width: 100%;
         height: 100%;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16), 0 0 0 2px rgba(255, 255, 255, 0.8);
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
-        overflow: visible;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
         animation: gentleFloat 3s ease-in-out infinite;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+        position: relative;
+      }
+
+      .floating-mushroom-widget:hover .mushroom-graphic-wrap {
+        transform: scale(1.15) rotate(-3deg);
+        filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
       }
 
       @keyframes gentleFloat {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-      }
-
-      /* 呼吸光環 */
-      .glow-ring {
-        position: absolute;
-        inset: -3px;
-        border-radius: 50%;
-        opacity: 0.8;
-        pointer-events: none;
-        animation: pulseRing 2s infinite ease-out;
-      }
-
-      @keyframes pulseRing {
-        0% { transform: scale(0.95); opacity: 0.8; }
-        50% { transform: scale(1.1); opacity: 0.3; }
-        100% { transform: scale(0.95); opacity: 0.8; }
-      }
-
-      /* 蘑菇圖示包裝 */
-      .mushroom-graphic-wrap {
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.15));
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-
-      .floating-mushroom-widget:hover .mushroom-graphic-wrap {
-        transform: scale(1.12) rotate(-3deg);
+        50% { transform: translateY(-5px); }
       }
 
       .sparkle-star {
-        transform-origin: 33px 10px;
+        transform-origin: 32px 10px;
         animation: starPulse 1.6s infinite ease-in-out;
       }
 
@@ -133,7 +104,7 @@
         50% { transform: scale(1.35) rotate(25deg); opacity: 1; }
       }
 
-      .floating-mushroom-widget.completed .mushroom-bubble {
+      .floating-mushroom-widget.completed .mushroom-graphic-wrap {
         animation: bouncePop 1.2s infinite ease-in-out;
       }
 
@@ -142,15 +113,16 @@
         50% { transform: translateY(-8px) scale(1.1); }
       }
 
-      /* 迷你狀態指示點 */
+      /* 迷你狀態指示點 (自然依附在香菇右下側) */
       .mini-badge {
         position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 12px;
-        height: 12px;
+        bottom: 3px;
+        right: 4px;
+        width: 13px;
+        height: 13px;
         border-radius: 50%;
         border: 2px solid #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
       }
 
       .mini-badge.battling { background: #ef4444; }
@@ -419,7 +391,7 @@
     const capFill = cfg.isSpecial ? 'url(#cap-grad-special)' : `url(#cap-grad-${color})`;
 
     return `
-      <svg viewBox="0 0 40 40" width="38" height="38" class="pikmin-mushroom-svg">
+      <svg viewBox="0 0 40 40" width="54" height="54" class="pikmin-mushroom-svg">
         <defs>
           ${capGrad}
           <linearGradient id="stem-grad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -477,9 +449,8 @@
     const colorConfig = COLOR_MAP[mush.color] || COLOR_MAP.red;
 
     widget.innerHTML = `
-      <div class="mushroom-bubble">
-        <div class="glow-ring" style="box-shadow: 0 0 14px ${colorConfig.hex};"></div>
-        <div class="mushroom-graphic-wrap">${getMushroomSvg(mush.color)}</div>
+      <div class="mushroom-graphic-wrap">
+        ${getMushroomSvg(mush.color)}
         <div class="mini-badge battling"></div>
       </div>
 
