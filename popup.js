@@ -1,7 +1,7 @@
 // popup.js - 皮克敏香菇計時器前端邏輯
 
 let mushrooms = [];
-let selectedColor = 'red';
+let selectedColor = 'special';
 let currentMode = 'duration'; // 'duration' | 'endtime'
 let tickInterval = null;
 
@@ -84,9 +84,21 @@ function initEventListeners() {
     if (isAddOpen) {
       settingsSection.classList.remove('open');
       toggleSettingsBtn.classList.remove('active');
-      document.getElementById('mush-name').focus();
+      const minInput = document.getElementById('input-minutes');
+      minInput.focus();
+      minInput.select();
     }
   });
+
+  // 進階選項（名稱、顏色、重生）展開/收合
+  const toggleAdvancedBtn = document.getElementById('toggle-advanced-btn');
+  const advancedDrawer = document.getElementById('advanced-drawer');
+  if (toggleAdvancedBtn && advancedDrawer) {
+    toggleAdvancedBtn.addEventListener('click', () => {
+      advancedDrawer.classList.toggle('open');
+      toggleAdvancedBtn.classList.toggle('open', advancedDrawer.classList.contains('open'));
+    });
+  }
 
   // 尺寸調整滑桿事件
   const sizeSlider = document.getElementById('mush-size-slider');
@@ -107,11 +119,15 @@ function initEventListeners() {
 
   // 顏色選擇
   const colorChips = document.querySelectorAll('.color-chip');
+  const previewBadge = document.getElementById('advanced-preview-badge');
   colorChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       colorChips.forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
       selectedColor = chip.dataset.color;
+      if (previewBadge) {
+        previewBadge.textContent = chip.textContent.trim();
+      }
     });
   });
 
@@ -145,12 +161,18 @@ function initEventListeners() {
     }
   });
 
-  // 點擊/聚焦時自動全選數字（懶人友善）
+  // 點擊/聚焦時自動全選數字（懶人友善），按 Enter 直接開始計時
   const hInput = document.getElementById('input-hours');
   const mInput = document.getElementById('input-minutes');
   [hInput, mInput].forEach((input) => {
     input.addEventListener('focus', () => input.select());
     input.addEventListener('click', () => input.select());
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddMushroom();
+      }
+    });
   });
 
   // 歸零按鈕
@@ -261,6 +283,17 @@ async function handleAddMushroom() {
   nameInput.value = '';
   document.getElementById('input-hours').value = 0;
   document.getElementById('input-minutes').value = 30;
+  selectedColor = 'special';
+  document.querySelectorAll('.color-chip').forEach((c) => {
+    c.classList.toggle('active', c.dataset.color === 'special');
+  });
+  const previewBadge = document.getElementById('advanced-preview-badge');
+  if (previewBadge) previewBadge.textContent = '✨ 特殊';
+  const advancedDrawer = document.getElementById('advanced-drawer');
+  if (advancedDrawer) advancedDrawer.classList.remove('open');
+  const toggleAdvancedBtn = document.getElementById('toggle-advanced-btn');
+  if (toggleAdvancedBtn) toggleAdvancedBtn.classList.remove('open');
+
   document.getElementById('add-form').classList.remove('open');
   document.getElementById('toggle-add-btn').classList.remove('active');
   renderMushrooms();

@@ -74,76 +74,86 @@
     <section id="add-form" class="add-section">
       <div class="form-title">🌱 新增香菇鬧鐘</div>
 
-      <div class="form-group">
-        <label for="mush-name">香菇名稱 / 地點</label>
-        <input type="text" id="mush-name" placeholder="例如：中山站大紅菇、公司旁黃菇" />
-      </div>
-
-      <!-- Color Selector -->
-      <div class="form-group">
-        <label>香菇種類 / 顏色</label>
-        <div class="color-picker-grid" id="color-picker">
-          <button type="button" class="color-chip active" data-color="red" title="紅菇">🔴 紅</button>
-          <button type="button" class="color-chip" data-color="yellow" title="黃菇">🟡 黃</button>
-          <button type="button" class="color-chip" data-color="blue" title="藍菇">🔵 藍</button>
-          <button type="button" class="color-chip" data-color="white" title="白菇">⚪ 白</button>
-          <button type="button" class="color-chip" data-color="purple" title="紫菇">🟣 紫</button>
-          <button type="button" class="color-chip" data-color="pink" title="粉/羽毛菇">🌸 粉</button>
-          <button type="button" class="color-chip" data-color="gray" title="灰/岩石菇">🪨 灰</button>
-          <button type="button" class="color-chip" data-color="special" title="特殊活動菇">✨ 特殊</button>
-        </div>
-      </div>
-
       <!-- Mode Selector: Duration vs End Time -->
-      <div class="form-group">
-        <div class="mode-tabs">
-          <button type="button" class="tab-btn active" id="tab-duration">倒數剩餘時間</button>
-          <button type="button" class="tab-btn" id="tab-endtime">指定結束時間</button>
-        </div>
-
-        <!-- Mode A: Duration Input -->
-        <div id="duration-input-box" class="time-input-box">
-          <div class="input-row center-row">
-            <div class="time-field">
-              <input type="number" id="input-hours" min="0" max="99" value="0" placeholder="0" />
-              <span>時</span>
-            </div>
-            <div class="time-field">
-              <input type="number" id="input-minutes" min="0" max="59" value="30" placeholder="0" />
-              <span>分</span>
-            </div>
-          </div>
-          <div class="quick-presets center-presets">
-            <button type="button" class="preset-btn" data-h="0" data-m="15">+15分</button>
-            <button type="button" class="preset-btn" data-h="0" data-m="30">+30分</button>
-            <button type="button" class="preset-btn" data-h="1" data-m="0">+1小時</button>
-            <button type="button" class="preset-btn" data-h="2" data-m="0">+2小時</button>
-            <button type="button" class="preset-btn" data-h="4" data-m="0">+4小時</button>
-          </div>
-          <button type="button" class="btn-reset-bar" id="btn-reset-time" title="將時與分重置為 0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-              <path d="M3 3v5h5"/>
-            </svg>
-            <span>全部歸零 (0時0分)</span>
-          </button>
-        </div>
-
-        <!-- Mode B: End Time Input -->
-        <div id="endtime-input-box" class="time-input-box hidden">
-          <div class="input-row">
-            <input type="time" id="input-endtime" />
-          </div>
-          <span class="hint-text">選擇今日（或隔日）預計打完的時間</span>
-        </div>
+      <div class="mode-tabs">
+        <button type="button" class="tab-btn active" id="tab-duration">倒數剩餘時間</button>
+        <button type="button" class="tab-btn" id="tab-endtime">指定結束時間</button>
       </div>
 
-      <!-- Respawn Setting -->
-      <div class="form-group respawn-config">
-        <label class="checkbox-label">
-          <input type="checkbox" id="enable-respawn" checked />
-          <span>戰鬥打完後，自動 +<input type="number" id="respawn-mins" value="5" min="1" max="60" class="mini-input" /> 分鐘重生提醒</span>
-        </label>
+      <!-- Mode A: Digital Clock Duration Input (C-Position) -->
+      <div id="duration-input-box" class="time-input-box digital-clock-box">
+        <div class="digital-clock-display">
+          <div class="clock-unit">
+            <input type="number" id="input-hours" class="clock-digit-input" min="0" max="99" value="0" placeholder="0" />
+            <span class="clock-unit-label">時 (HR)</span>
+          </div>
+          <span class="clock-colon">:</span>
+          <div class="clock-unit">
+            <input type="number" id="input-minutes" class="clock-digit-input" min="0" max="59" value="30" placeholder="0" />
+            <span class="clock-unit-label">分 (MIN)</span>
+          </div>
+        </div>
+
+        <div class="quick-presets center-presets">
+          <button type="button" class="preset-btn" data-h="0" data-m="15">+15分</button>
+          <button type="button" class="preset-btn" data-h="0" data-m="30">+30分</button>
+          <button type="button" class="preset-btn" data-h="1" data-m="0">+1小時</button>
+          <button type="button" class="preset-btn" data-h="2" data-m="0">+2小時</button>
+          <button type="button" class="preset-btn" data-h="4" data-m="0">+4小時</button>
+        </div>
+
+        <button type="button" class="btn-reset-bar" id="btn-reset-time" title="將時與分重置為 0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span>全部歸零 (0時0分)</span>
+        </button>
+      </div>
+
+      <!-- Mode B: End Time Input -->
+      <div id="endtime-input-box" class="time-input-box hidden">
+        <div class="endtime-picker-row">
+          <input type="time" id="input-endtime" class="large-time-picker" />
+        </div>
+        <span class="hint-text">選擇今日（或隔日）預計打完的時間</span>
+      </div>
+
+      <!-- Collapsible Advanced Options (Name, Color, Respawn) -->
+      <div class="advanced-section">
+        <button type="button" id="toggle-advanced-btn" class="advanced-toggle-btn">
+          <span class="toggle-text"><span id="advanced-arrow">▾</span> 進階自訂 (名稱、顏色、重生)</span>
+          <span class="toggle-preview-badge" id="advanced-preview-badge">✨ 特殊</span>
+        </button>
+        <div id="advanced-drawer" class="advanced-drawer">
+          <div class="form-group">
+            <label for="mush-name">香菇名稱 / 地點</label>
+            <input type="text" id="mush-name" placeholder="例如：中山站大紅菇 (未填自動編號)" />
+          </div>
+
+          <!-- Color Selector (Default: Special) -->
+          <div class="form-group">
+            <label>香菇種類 / 顏色</label>
+            <div class="color-picker-grid" id="color-picker">
+              <button type="button" class="color-chip active" data-color="special" title="特殊活動菇">✨ 特殊</button>
+              <button type="button" class="color-chip" data-color="red" title="紅菇">🔴 紅</button>
+              <button type="button" class="color-chip" data-color="yellow" title="黃菇">🟡 黃</button>
+              <button type="button" class="color-chip" data-color="blue" title="藍菇">🔵 藍</button>
+              <button type="button" class="color-chip" data-color="white" title="白菇">⚪ 白</button>
+              <button type="button" class="color-chip" data-color="purple" title="紫菇">🟣 紫</button>
+              <button type="button" class="color-chip" data-color="pink" title="粉/羽毛菇">🌸 粉</button>
+              <button type="button" class="color-chip" data-color="gray" title="灰/岩石菇">🪨 灰</button>
+            </div>
+          </div>
+
+          <!-- Respawn Setting -->
+          <div class="form-group respawn-config">
+            <label class="checkbox-label">
+              <input type="checkbox" id="enable-respawn" checked />
+              <span>戰鬥打完後，自動 +<input type="number" id="respawn-mins" value="5" min="1" max="60" class="mini-input" /> 分鐘重生提醒</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <!-- Form Actions -->
