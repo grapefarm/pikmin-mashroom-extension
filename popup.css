@@ -568,13 +568,12 @@ body {
 /* Form Action Buttons */
 .form-actions {
   display: flex;
-  gap: 8px;
   margin-top: 14px;
 }
 
 .btn-primary {
-  flex: 2;
-  padding: 9px 0;
+  width: 100%;
+  padding: 10px 0;
   background: var(--primary);
   color: #fff;
   border: none;
@@ -582,27 +581,16 @@ body {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
 }
 
 .btn-primary:hover {
   background: var(--primary-hover);
 }
 
-.btn-secondary {
-  flex: 1;
-  padding: 9px 0;
-  background: #e2e8f0;
-  color: #475569;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-secondary:hover {
-  background: #cbd5e1;
+.btn-primary:active {
+  transform: scale(0.99);
 }
 
 /* Mushroom List */

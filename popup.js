@@ -64,7 +64,6 @@ function initEventListeners() {
   // 開關設定面板與新增表單
   const toggleBtn = document.getElementById('toggle-add-btn');
   const addForm = document.getElementById('add-form');
-  const cancelBtn = document.getElementById('cancel-add-btn');
   const toggleSettingsBtn = document.getElementById('toggle-settings-btn');
   const settingsSection = document.getElementById('settings-section');
 
@@ -87,11 +86,6 @@ function initEventListeners() {
       toggleSettingsBtn.classList.remove('active');
       document.getElementById('mush-name').focus();
     }
-  });
-
-  cancelBtn.addEventListener('click', () => {
-    addForm.classList.remove('open');
-    toggleBtn.classList.remove('active');
   });
 
   // 尺寸調整滑桿事件
