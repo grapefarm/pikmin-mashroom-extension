@@ -74,12 +74,15 @@ function initEventListeners() {
     toggleSettingsBtn.classList.toggle('active', isOpen);
     if (isOpen) {
       addForm.classList.remove('open');
+      toggleBtn.classList.remove('active');
     }
   });
 
   toggleBtn.addEventListener('click', () => {
     addForm.classList.toggle('open');
-    if (addForm.classList.contains('open')) {
+    const isAddOpen = addForm.classList.contains('open');
+    toggleBtn.classList.toggle('active', isAddOpen);
+    if (isAddOpen) {
       settingsSection.classList.remove('open');
       toggleSettingsBtn.classList.remove('active');
       document.getElementById('mush-name').focus();
@@ -88,6 +91,7 @@ function initEventListeners() {
 
   cancelBtn.addEventListener('click', () => {
     addForm.classList.remove('open');
+    toggleBtn.classList.remove('active');
   });
 
   // 尺寸調整滑桿事件
@@ -246,6 +250,7 @@ async function handleAddMushroom() {
   // 重置表單並收合
   nameInput.value = '';
   document.getElementById('add-form').classList.remove('open');
+  document.getElementById('toggle-add-btn').classList.remove('active');
   renderMushrooms();
 }
 

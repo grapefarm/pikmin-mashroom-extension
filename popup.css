@@ -80,8 +80,6 @@ body {
   border: none;
   background: var(--primary);
   color: #fff;
-  font-size: 20px;
-  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -90,9 +88,31 @@ body {
   box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
 }
 
-.btn-icon:hover {
+.btn-icon.btn-add {
+  background: var(--primary);
+}
+
+.btn-icon.btn-add svg {
+  width: 17px;
+  height: 17px;
+  stroke: #ffffff;
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-icon.btn-add:hover {
   background: var(--primary-hover);
   transform: scale(1.05);
+}
+
+/* 展開新增面板時，+ 順時針優雅旋轉 45 度變成 ×，背景切換為質感珊瑚紅 */
+.btn-icon.btn-add.active {
+  background: #f43f5e;
+  box-shadow: 0 2px 8px rgba(244, 63, 94, 0.35);
+}
+
+.btn-icon.btn-add.active svg {
+  transform: rotate(45deg);
 }
 
 .btn-icon.btn-gear {
