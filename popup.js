@@ -151,13 +151,29 @@ function initEventListeners() {
     }
   });
 
+  // 點擊/聚焦時自動全選數字（懶人友善）
+  const hInput = document.getElementById('input-hours');
+  const mInput = document.getElementById('input-minutes');
+  [hInput, mInput].forEach((input) => {
+    input.addEventListener('focus', () => input.select());
+    input.addEventListener('click', () => input.select());
+  });
+
+  // 歸零按鈕
+  const resetBtn = document.getElementById('btn-reset-time');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      hInput.value = 0;
+      mInput.value = 0;
+    });
+  }
+
   // 快捷時間按鈕 (+15分, +30分, +1h, etc.)
   document.querySelectorAll('.preset-btn').forEach((btn) => {
+    if (btn.id === 'btn-reset-time') return;
     btn.addEventListener('click', () => {
       const addH = parseInt(btn.dataset.h, 10) || 0;
       const addM = parseInt(btn.dataset.m, 10) || 0;
-      const hInput = document.getElementById('input-hours');
-      const mInput = document.getElementById('input-minutes');
 
       let currentH = parseInt(hInput.value, 10) || 0;
       let currentM = parseInt(mInput.value, 10) || 0;
@@ -249,6 +265,8 @@ async function handleAddMushroom() {
 
   // 重置表單並收合
   nameInput.value = '';
+  document.getElementById('input-hours').value = 0;
+  document.getElementById('input-minutes').value = 30;
   document.getElementById('add-form').classList.remove('open');
   document.getElementById('toggle-add-btn').classList.remove('active');
   renderMushrooms();

@@ -467,6 +467,19 @@ body {
   color: var(--primary);
 }
 
+.preset-btn.reset-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.preset-btn.reset-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
 #input-endtime {
   padding: 6px 12px;
   font-size: 14px;

@@ -105,7 +105,7 @@
         <div id="duration-input-box" class="time-input-box">
           <div class="input-row">
             <div class="time-field">
-              <input type="number" id="input-hours" min="0" max="99" value="1" placeholder="0" />
+              <input type="number" id="input-hours" min="0" max="99" value="0" placeholder="0" />
               <span>時</span>
             </div>
             <div class="time-field">
@@ -114,6 +114,7 @@
             </div>
           </div>
           <div class="quick-presets">
+            <button type="button" class="preset-btn reset-btn" id="btn-reset-time" title="將時與分重置為 0">歸零</button>
             <button type="button" class="preset-btn" data-h="0" data-m="15">+15分</button>
             <button type="button" class="preset-btn" data-h="0" data-m="30">+30分</button>
             <button type="button" class="preset-btn" data-h="1" data-m="0">+1小時</button>
