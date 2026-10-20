@@ -427,6 +427,12 @@ body {
   gap: 12px;
 }
 
+.input-row.center-row {
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
 .time-field {
   display: flex;
   align-items: center;
@@ -450,6 +456,22 @@ body {
   flex-wrap: wrap;
 }
 
+.quick-presets.center-presets {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+}
+
+.quick-presets.center-presets .preset-btn {
+  flex: 1;
+  padding: 5px 0;
+  text-align: center;
+  font-size: 11px;
+}
+
 .preset-btn {
   padding: 4px 8px;
   font-size: 11px;
@@ -467,17 +489,38 @@ body {
   color: var(--primary);
 }
 
-.preset-btn.reset-btn {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #64748b;
+/* 長橫條歸零按鈕 */
+.btn-reset-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 11px;
   font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.preset-btn.reset-btn:hover {
+.btn-reset-bar svg {
+  stroke: #64748b;
+  transition: transform 0.3s ease, stroke 0.15s ease;
+}
+
+.btn-reset-bar:hover {
   background: #fee2e2;
   border-color: #fca5a5;
   color: #dc2626;
+}
+
+.btn-reset-bar:hover svg {
+  stroke: #dc2626;
+  transform: rotate(-45deg);
 }
 
 #input-endtime {

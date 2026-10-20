@@ -103,7 +103,7 @@
 
         <!-- Mode A: Duration Input -->
         <div id="duration-input-box" class="time-input-box">
-          <div class="input-row">
+          <div class="input-row center-row">
             <div class="time-field">
               <input type="number" id="input-hours" min="0" max="99" value="0" placeholder="0" />
               <span>時</span>
@@ -113,14 +113,20 @@
               <span>分</span>
             </div>
           </div>
-          <div class="quick-presets">
-            <button type="button" class="preset-btn reset-btn" id="btn-reset-time" title="將時與分重置為 0">歸零</button>
+          <div class="quick-presets center-presets">
             <button type="button" class="preset-btn" data-h="0" data-m="15">+15分</button>
             <button type="button" class="preset-btn" data-h="0" data-m="30">+30分</button>
             <button type="button" class="preset-btn" data-h="1" data-m="0">+1小時</button>
             <button type="button" class="preset-btn" data-h="2" data-m="0">+2小時</button>
             <button type="button" class="preset-btn" data-h="4" data-m="0">+4小時</button>
           </div>
+          <button type="button" class="btn-reset-bar" id="btn-reset-time" title="將時與分重置為 0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            <span>全部歸零 (0時0分)</span>
+          </button>
         </div>
 
         <!-- Mode B: End Time Input -->
