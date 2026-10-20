@@ -759,17 +759,16 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
-  padding: 10px 22px;
-  background: linear-gradient(135deg, #16a34a, #15803d);
+  margin-top: 14px;
+  padding: 9px 18px;
+  background-color: var(--primary);
   color: #ffffff;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
-  border-radius: 24px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.28);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .btn-empty-cta svg {
@@ -777,14 +776,11 @@ body {
 }
 
 .btn-empty-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.38);
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background-color: var(--primary-hover);
 }
 
 .btn-empty-cta:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.2);
+  background-color: #166534;
 }
 
 .mushrooms-list {
