@@ -90,6 +90,16 @@ function initEventListeners() {
     }
   });
 
+  // 空狀態下中央新增大按鈕
+  const emptyAddBtn = document.getElementById('empty-add-btn');
+  if (emptyAddBtn) {
+    emptyAddBtn.addEventListener('click', () => {
+      if (!addForm.classList.contains('open')) {
+        toggleBtn.click();
+      }
+    });
+  }
+
   // 進階選項（名稱、顏色、重生）展開/收合
   const toggleAdvancedBtn = document.getElementById('toggle-advanced-btn');
   const advancedDrawer = document.getElementById('advanced-drawer');
